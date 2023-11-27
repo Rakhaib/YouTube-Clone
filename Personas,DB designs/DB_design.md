@@ -15,14 +15,14 @@
 - video_url (one of the above will be used)
 - thumbnail
 - views
-- likes,dislikes
+- likes
   
 ## Comment Model :
 - user(foreign key to User)
 - video(foreign key to Video)
 - text
 - created_time
-- like,dislikes
+- likes
   
 ## Subscriptions Model :
 - subscriber(foreign key to user)
