@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}" />
+</head>
+
+<body>
+    <div class="main">
+        <img src="https://i0.wp.com/www.freefonts.io/wp-content/uploads/2021/08/Youtube-Logo-Font.jpg?resize=849%2C395&ssl=1"
+            alt="YouTube logo" />
+        <h2>Register</h2>
+        <form method="post">
+            {% csrf_token %} {{ form }}
+            <div class="btn-submit">
+                <button class="btn-submit" type="submit">Register</button>
+            </div>
+        </form>
+        <div class="link-login">
+            <p>
+                Already have an account?<br />
+                <a href="{% url 'login' %}">Login here</a>.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,5 +1,9 @@
 from django.urls import path
 from . import views
 urlpatterns=[
-    path('',views.video_player,name='video_player')
+    path('',views.home,name='home'),
+    path('login/',views.login_view,name='login'),
+    path('register/',views.register,name='register'),
+    path('logout/',views.logout_view,name='logout'),
+    path('upload/',views.upload,name='upload')
 ]

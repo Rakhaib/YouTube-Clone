@@ -1,0 +1,44 @@
+ {% load static %} 
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+ </head>
+ <body>
+    
+     
+     <!-- <div class="main">
+         <h2>Login</h2>
+         <form method="post">
+             <input type="hidden" name="csrfmiddlewaretoken"
+                 value="ceypALmBexJ0VkqL18ez0GC2x0j00SM4GWIKOAzXyRw05r2o7ShYjwoljdhPUvhx">
+             <p>
+                 <label for="id_username">Username:</label>
+                 <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username"
+                     maxlength="150" required="" id="id_username">
+             </p>
+             <p>
+                 <label for="id_password">Password:</label>
+                 <input type="password" name="password" autocomplete="current-password" required="" id="id_password">
+             </p>
+             <button type="submit">Login</button>
+         </form>
+     </div> -->
+     
+     <div class="main">
+         <img src="https://i0.wp.com/www.freefonts.io/wp-content/uploads/2021/08/Youtube-Logo-Font.jpg?resize=849%2C395&ssl=1" alt="YouTube logo">
+         <h2>Login</h2>
+         <form method="post">
+             {% csrf_token %} {{ form.as_p }}
+             <button type="submit">Login</button>
+         </form>
+         <div class="link-register">
+             <p>Don't have an account?<br> <a href="{% url 'register' %}">Register here</a>.</p>
+         </div>
+         </div>
+     </div>
+ </body>
+ </html>

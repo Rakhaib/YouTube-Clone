@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Youtube
+{% endblock title %}
+
+{% block body %}
+
+
+    
+    <div>This is Home page</div>
+
+    {% if user.username %}
+    <p>The logged in user is {{user}}</p>
+    <p>The logged in user email is {{user.email}}</p>
+
+    {%else%}
+    <p>Non-logged in user</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+{% endif %}
+
+    
+{% endblock body %}
