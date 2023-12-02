@@ -14,10 +14,85 @@ a{
   text-decoration: none;
 }
 
+.profile-button{
+  border-style: none;
+  background-color:#f9f9f9
+}
+
+.profile-button:hover{
+  background-color: #e5e5e5;
+  cursor: pointer;transform: scale(1.1); /* Adjust the scale factor as needed */
+  transition: transform 0.3s ease;
+}
+
+.material-icons {
+    color: rgb(96, 96, 96);
+    font-size: 33px;
+    margin-left:10px;
+  }
+
+.contain{
+    display: flex;
+}
+
+.text{
+    margin-top:3px;
+    margin-left: 8px;
+}
+
+.profile-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-button {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.options{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-list {
+    position: absolute;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    width: 187px;
+}
+
+.menu-list li {
+    padding: 8px 16px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* .menu-list li:last-child {
+    border-bottom: none;
+} */
+
+
+
+
 /* header */
 
 .material-icons {
   color: rgb(96, 96, 96);
+  font-size: 33px;
+  border-radius: 20%;
+}
+.material-icons:hover{
+  background-color: #e5e5e5;
+  cursor: pointer;
+  transform: scale(1.1); /* Adjust the scale factor as needed */
+  transition: transform 0.3s ease;
 }
 
 .header {
@@ -120,6 +195,17 @@ a{
   display: none;
 }
 
+.profile-pic{
+  width:40px;
+  height:33px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+
+
+
 hr {
   height: 1px;
   background-color: #e5e5e5;
@@ -141,7 +227,7 @@ hr {
   display: flex;
 
   flex-direction: row;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   flex-wrap: wrap;
 }
 
@@ -159,12 +245,13 @@ hr {
 
 .video__thumbnail img {
   object-fit: cover;
+  border-radius: 12px;
   height: 100%;
   width: 100%;
 }
 
 .author img {
-  object-fit: cover;
+  object-fit:cover;
   border-radius: 50%;
   height: 40px;
   width: 40px;

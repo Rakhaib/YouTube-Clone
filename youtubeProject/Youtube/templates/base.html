@@ -1,114 +1,118 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title>{% block title %}
-        Title
-    {% endblock title %}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link rel="icon" href="{% static 'pics/utube.ico' %}" type="image/x-icon" />
+    <title>{% block title %} Title {% endblock title %}</title>
 
-    {% block head %}
-        
-    {% endblock head %}
-</head>
+    {% block head %} {% endblock head %}
+  </head>
 
-<body>
+  <body>
     <div class="header">
-        <div class="header__left">
-          <i id="menu" class="material-icons">menu</i>
-          <a href="{% url 'home' %}" title="YouTube"><img
+      <div class="header__left">
+        <i id="menu" class="material-icons">menu</i>
+        <a href="{% url 'home' %}" title="YouTube"
+          ><img
             src="https://cdn.mos.cms.futurecdn.net/8gzcr6RpGStvZFA2qRt4v6.jpg"
             alt=""
-          /></a>
-          
-        </div>
-  
-        <div class="header__search">
-          <form action="">
-            <input type="text" placeholder="Search" />
-            <button><i class="material-icons">search</i></button>
-          </form>
-        </div>
-  
-        <div class="header__icons">
-          <i class="material-icons display-this search-icon">search</i>
-          <a href="{% url 'upload' %}" title="Upload video">
-          <i class="material-icons">video_call</i></a>
-          <i class="material-icons">apps</i> 
-          <i class="material-icons">notifications</i>
-          <i class="material-icons display-this">account_circle</i>
-        </div>
+        /></a>
       </div>
-      <!-- Header Ends -->
-  
-      <!-- Main Body Starts -->
-      <div class="mainBody">
-        <!-- Sidebar Starts -->
-  
-        <div class="sidebar">
-          <div class="sidebar__categories">
-            <a href="{% url 'home' %}">
-              <div class="sidebar__category">
-                <i class="material-icons">home</i>
-                <span class='icon-text'>Home</span>
-              </div>
-            </a>
-            <div class="sidebar__category">
-              <i class="material-icons">local_fire_department</i>
-              <span class='icon-text'>Trending</span>
-            </div>
-            <div class="sidebar__category">
-              <i class="material-icons">subscriptions</i>
-              <span class='icon-text'>Subcriptions</span>
-            </div>
-          </div>
-          <hr />
-          <div class="sidebar__categories">
-            <!-- <div class="sidebar__category">
-              <i class="material-icons">library_add_check</i>
-              <span>Library</span>
-            </div> -->
-            <div class="sidebar__category">
-              <i class="material-icons">history</i>
-              <span class='icon-text'>History</span>
-            </div>
-            <div class="sidebar__category">
-              <i class="material-icons">play_arrow</i>
-              <span class='icon-text'>Your Videos</span>
-            </div>
-            <!-- <div class="sidebar__category">
-              <i class="material-icons">watch_later</i>
-              <span>Watch Later</span>
-            </div> -->
-            <div class="sidebar__category">
-              <i class="material-icons">thumb_up</i>
-              <span class='icon-text'>Liked Videos</span>
-            </div>
-          </div>
-          <hr />
-        </div>
-        <!-- Sidebar Ends -->
-  
-        <!-- Videos Section -->
-        
-        <div class="videos">
-            {% block body %}
-                
-            {% endblock body %}
-        </div>
-      </div>
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const hamburgerIcon = document.getElementById('menu');
-            const sidebar = document.querySelector('.sidebar');
-            hamburgerIcon.addEventListener('click', function () {
-              sidebar.classList.toggle('sidebar-visible');
-            });
-          });
-      </script>
-</body>
 
+      <div class="header__search">
+        <form action="">
+          <input type="text" placeholder="Search" />
+          <button><i class="material-icons">search</i></button>
+        </form>
+      </div>
+
+      <div class="header__icons">
+        <i class="material-icons display-this search-icon">search</i>
+        <a href="{% url 'upload' %}" title="Upload video">
+          <i class="material-icons">video_call</i></a
+        >
+        <i class="material-icons">apps</i>
+        <i class="material-icons">notifications</i>
+        {% if user.is_authenticated %}
+        <button class="profile-button" onclick=toggleMenu() title="{{user.username}}">
+          <img
+            src="{% if user.profile.image %}{{ user.profile.image.url }}
+              {% else %}
+              {% static 'pics/blank-profile.png'%}
+              {% endif %}"
+            alt="Profile"
+            class="profile-pic"
+          />
+        </button>
+        {% else %}
+        <a href="{% url 'login' %}" title="Login/Register">
+          <i class="material-icons display-this">account_circle</i>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    <!-- Header Ends -->
+
+    <!-- Main Body Starts -->
+    <div class="mainBody">
+      <!-- Sidebar Starts -->
+
+      <div class="sidebar">
+        <div class="sidebar__categories">
+          <a href="{% url 'home' %}">
+            <div class="sidebar__category">
+              <i class="material-icons">home</i>
+              <span class="icon-text">Home</span>
+            </div>
+          </a>
+          <div class="sidebar__category">
+            <i class="material-icons">local_fire_department</i>
+            <span class="icon-text">Trending</span>
+          </div>
+          <div class="sidebar__category">
+            <i class="material-icons">subscriptions</i>
+            <span class="icon-text">Subcriptions</span>
+          </div>
+        </div>
+        <hr />
+        <div class="sidebar__categories">
+
+          <div class="sidebar__category">
+            <i class="material-icons">history</i>
+            <span class="icon-text">History</span>
+          </div>
+          <div class="sidebar__category">
+            <i class="material-icons">play_arrow</i>
+            <span class="icon-text">Your Videos</span>
+          </div>
+          <div class="sidebar__category">
+            <i class="material-icons">thumb_up</i>
+            <span class="icon-text">Liked Videos</span>
+          </div>
+        </div>
+        <hr />
+      </div>
+      <!-- Sidebar Ends -->
+
+      <!-- Videos Section -->
+
+      <div class="videos">{% block body %} {% endblock body %}</div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const hamburgerIcon = document.getElementById("menu");
+        const sidebar = document.querySelector(".sidebar");
+        hamburgerIcon.addEventListener("click", function () {
+          sidebar.classList.toggle("sidebar-visible");
+        });
+      });
+    </script>
+  </body>
 </html>

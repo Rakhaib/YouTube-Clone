@@ -1,0 +1,53 @@
+<!-- upload_page.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video - Your YouTube Clone</title>
+    <link rel="stylesheet" href="{% static 'css/upload.css'%}">
+</head>
+<body>
+    <div class="upload-container">
+        <h1>Upload Video</h1>
+        <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div>
+                <label for="{{ form.title.id_for_label }}">Video Title:</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <div class="error">{{ form.title.errors.as_text }}</div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.description.id_for_label }}">Video Description:</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="error">{{ form.description.errors.as_text }}</div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.video_file.id_for_label }}">Select Video File:</label>
+                {{ form.video_file }}
+                {% if form.video_file.errors %}
+                    <div class="error">{{ form.video_file.errors.as_text }}</div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.thumbnail.id_for_label }}">Select Thumbnail:</label>
+                {{ form.thumbnail }}
+                {% if form.thumbnail.errors %}
+                    <div class="error">{{ form.thumbnail.errors.as_text }}</div>
+                {% endif %}
+            </div>
+            
+            <button type="submit">Upload Video</button>
+        </form>
+    </div>
+</body>
+</html>

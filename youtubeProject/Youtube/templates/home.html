@@ -7,9 +7,36 @@
 
 {% block body %}
 
+  <div class="videos__container">
+    {% for x in videos %}
+        {% for y in videos %}
+          {% for video in videos %}
+            <div class="video">
+              <div class="video__thumbnail">
+                <img src="{{video.thumbnail.url}}" alt="" />
+              </div>
+              <div class="video__details">
+                <div class="author">
+                  <img src="{% if video.user.profile.image %}{{ video.user.profile.image.url }}
+                  {% else %}
+                  {% static 'pics/blank-profile.png'%}
+                  {% endif %}" alt="" />
+                </div>
+                <div class="title">
+                  <h3>
+                    {{video.title}} {{video.id}}
+                  </h3>
+                  <a href="">{{video.user}}</a>
+                  <span>10M Views • {{ video.upload_date|timesince:""}} Ago</span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+      {% endfor %}
+    {% endfor %}
+  </div>    
 
-    
-    <div>This is Home page</div>
+    <!-- <div>This is Home page</div>
 
     {% if user.username %}
     <p>The logged in user is {{user}}</p>
@@ -17,14 +44,14 @@
 
     {%else%}
     <p>Non-logged in user</p>
-    {% endif %}
+    {% endif %} -->
 
-    {% if user.is_authenticated %}
+  {% if user.is_authenticated %}
     <form action="{% url 'logout' %}" method="post">
         {% csrf_token %}
         <button type="submit">Logout</button>
     </form>
-{% endif %}
+  {% endif %}
 
     
 {% endblock body %}

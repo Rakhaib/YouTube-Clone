@@ -16,3 +16,7 @@ class VideoUploadForm(forms.ModelForm):
     class Meta:
         model = Video
         fields = ['title','description','video_file','thumbnail']
+        widgets = {
+            'video_file': forms.FileInput(attrs={'accept': 'video/mp4'}),
+            # 'thumbnail':forms.File
+        }

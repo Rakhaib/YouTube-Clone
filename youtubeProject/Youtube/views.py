@@ -2,15 +2,17 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm
+from .forms import RegistrationForm, VideoUploadForm
 from django.http import HttpResponse
+from .models import Video
 
 
 # Create your views here.
 
 def home(request):
     user=request.user
-    return render(request,'home.html',{'user':user})
+    all_videos=Video.objects.all()
+    return render(request,'home.html',{'user':user,'videos':all_videos})
 
 def video_player(request):
     return render (request,'video_player.html',{'url':'video_url'})
@@ -48,4 +50,14 @@ def logout_view(request):
 
 @login_required(login_url='/login/')
 def upload(request):
-    return HttpResponse(f"OK, {request.user.username}")
+    if request.method == 'POST':
+        form = VideoUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            video = form.save(commit=False)
+            video.user = request.user  # Assuming you have user authentication in place
+            video.save()
+            return redirect('home')  # Redirect to a success page or wherever you want
+    else:
+        form = VideoUploadForm()
+
+    return render(request, 'upload_video.html', {'form': form})
