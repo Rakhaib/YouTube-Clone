@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Trending
+{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/trending.css' %}">
+{% endblock head %}
+
+{% block body %}
+
+    {% block heading %}
+        <div class="heading">
+            <img src="https://www.youtube.com/img/trending/avatar/trending.png" alt="">
+            <h1>Trending</h1>
+        </div>
+    {% endblock heading %}
+    <!-- <hr style="height:0.5px;border-width:0;color:gray;background-color:gray"> -->
+    <div class="container">
+    
+    {% block video-part %}
+        {% for video in videos %}
+            <a href="{% url 'video_view' video.id%}">
+                <div class="video">
+                    <div class="video__thumbnail">
+                        <img src="{{video.thumbnail.url}}" alt="" />
+                    </div>
+                    <div class="video__details">
+                        <div class="title">
+                            <h3>
+                            {{video.title}}
+                            </h3>
+                            <a href="">{{video.user}}</a>
+                            <span>{{video.views}} Views • {{ video.upload_date|timesince:""}} Ago</span>
+                            <span class="descrip">
+                                {{video.description}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    {% endblock video-part %}
+    </div>
+{% endblock body %}

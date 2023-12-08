@@ -1,0 +1,51 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block title %}
+    Subscriptions
+{% endblock title %}
+
+
+{% block head %}
+    <style>
+        .videos{
+            display: flex;
+        }
+        .video:hover{
+            transform: none;
+            transition: none;
+        }
+    </style>
+{% endblock head %}
+
+{% block body %}
+    {% if videos %}
+    {% for video in videos %}
+        <a href="{% url 'video_view' video.id%}">
+            <div class="video">
+                <div class="video__thumbnail">
+                    <img src="{{video.thumbnail.url}}" alt="" />
+                </div>
+                <div class="video__details">
+                    <div class="author">
+                    <img src="{% if video.user.profile.image %}{{ video.user.profile.image.url }}
+                    {% else %}
+                    {% static 'pics/blank-profile.png'%}
+                    {% endif %}" alt="" />
+                    </div>
+                    <div class="title">
+                    <h3>
+                        {{video.title}}
+                    </h3>
+                    <a href="">{{video.user}}</a>
+                    <span>{{video.views}} Views • {{ video.upload_date|timesince:""}} Ago</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+    {% else %}
+    <div style="text-align: center;" >No Subscriptions</div>
+    {% endif %}
+{% endblock body %}

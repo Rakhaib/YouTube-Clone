@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+{% load static%}
+
+{% block title %}
+{{cur_video.title}}
+{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/video_view.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="center">
+    <div class="primary">
+        <video id="player" controls>
+            <source src="{{ cur_video.video_file.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <h4 class="cur_title">{{cur_video.title}}</h4>
+        <div class="author">
+            <div class="start">
+                <a href="{% url 'channel' cur_video.user %}">
+                <img src="{% if cur_video.user.profile.image %}{{ cur_video.user.profile.image.url }}
+                    {% else %}
+                    {% static 'pics/blank-profile.png'%}
+                    {% endif %}" alt="channel" /></a>
+                <div class="channel_details">
+                    <h4>{{cur_video.user.username}}</h4>
+                    <span>{{cur_video.user.profile.users_subscribed_cnt}} 
+                        {% if  cur_video.user.profile.users_subscribed_cnt != 1  %}
+                            Subscribers
+                        {% else %}
+                            Subscriber
+                        {% endif %}
+                    </span>
+                </div>
+                {% if cur_video.user != user %}
+                <button class="butn join">
+                    Join
+                </button>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="video_id" value="subscribe">
+                    <input type="hidden" name="subscribe" value="{{cur_video.user.id}}">
+                    <button class="butn subscribe" onclick="toggleSub()" style="{% if request.user.profile in cur_video.user.profile.users_subscribed %}background-color: #888888;{% endif %}">
+                        {% if request.user.profile in cur_video.user.profile.users_subscribed %}
+                            Subscribed
+                        {% else %}
+                            Subscribe
+                        {% endif %}
+                    </button>
+                    
+                </form>
+                {% endif %}
+            </div>
+            <div class="end">
+                <div class="likeDis">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="video_id" value="like" />
+                        <button class="like" onclick="" type="submit">
+                            {% if request.user in cur_video.user_has_liked %}
+                            <i class="material-icons comm_thumb" style="color: #065fd4;">thumb_up</i>
+                            {% else %}
+                            <i class="material-icons comm_thumb">thumb_up</i>
+                            {% endif %}
+                            <span class="info">{{cur_video.likes}}</span>
+                        </button>
+                        <button class="dislike">
+                            <i class="material-icons thumb down">thumb_down</i>
+                        </button>
+                    </form>
+                </div>
+                <button class="butn share" onclick="copyUrl()" title="Copy to clipboard">
+                    <i class="material-icons thumb share-icon">
+                        share
+                    </i>
+                    <span class="info">share</span>
+                </button>
+                <button class="butn share">
+                    <i class="material-icons thumb horiz">
+                        more_horiz
+                    </i>
+                </button>
+            </div>
+        </div>
+        <div class="descrip">
+            <h4 class="stats">
+                {{cur_video.views}} Views • {{ cur_video.upload_date|timesince:""}} Ago
+            </h4>
+            {{cur_video.description|truncatechars:100}}...
+        </div>
+        <div class="comments">
+            <h3>{{com_count}} Comments</h3>
+
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="video_id" value="new_comment">
+                <div class="input-comment">
+                    <img class='comment-pic' src="{% if user.profile.image %}{{ user.profile.image.url }}
+                        {% else %}
+                        {% static 'pics/blank-profile.png'%}
+                        {% endif %}" alt="channel" />
+                    {% for field in com_form %}
+                    <div class="form-group">
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="submit-btn">Comment</button>
+            </form>
+
+            <!-- comment section -->
+
+            <div class="comments">
+                {% for comment in comments %}
+                {% if comment.parent_comment is none %}
+                <div class="comment {{comment.id}}">
+                    <div class="upper">
+                        <div class="profile-pic">
+                            <img class="comment-pic" src="{% if comment.commenter.profile.image %}{{ comment.commenter.profile.image.url }}
+                                        {% else %}
+                                        {% static 'pics/blank-profile.png'%}
+                                        {% endif %}"" alt="">
+                                    </div>
+                                    <div class=" commenter">
+                            <div class="up">
+                                <b>@{{comment.commenter}}</b>
+                                <small>{{ comment.date_posted|timesince:""}} Ago</small>
+                            </div>
+                            <div class="down">
+                                {{comment.text}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottomer">
+                        <div class="bottom">
+                            <div class="likes" title="Like">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="video_id" value="com_like">
+                                    <input type="hidden" name="comment_id" value="{{comment.id}}">
+                                    <button type="submit" class="com_like">
+                                        {% if request.user in comment.users_liked %}
+                                        <i class="material-icons comm_thumb" style="color: #065fd4;">thumb_up</i>
+                                        {% else %}
+                                        <i class="material-icons comm_thumb">thumb_up</i>
+                                        {% endif %}
+
+                                    </button>
+
+                                </form>
+                            </div>
+                            <span>
+                                {% if comment.likes > 0 %}
+                                {{comment.likes}}
+                                {% endif %}
+                            </span>
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="video_id" value="com_dislike">
+                                <input type="hidden" name="comment_id" value="{{comment.id}}">
+                                <button type="submit" class="com_like">
+                                    <i class="material-icons comm_thumb" title="Dislike">thumb_down</i>
+                                </button>
+                            </form>
+                            <button class="reply" onclick="toggleReply('{{comment.id}}')">
+                                Reply
+                            </button>
+                        </div>
+                        <div class="abys com-{{comment.id}}">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="video_id" value="sub_comment">
+                                <input type="hidden" name="parent-com-id" value="{{comment.id}}">
+                                <div class="input-comment">
+                                    <img class='comment-pic smaller' src="{% if cur_video.user.profile.image %}{{ cur_video.user.profile.image.url }}
+                                                {% else %}
+                                                {% static 'pics/blank-profile.png'%}
+                                                {% endif %}" alt="channel" />
+                                    {% for field in com_form %}
+                                    <div class="form-group">
+                                        {{ field }}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <button type="submit" class="submit-btn">Comment</button>
+                            </form>
+                        </div>
+                        <div class="replies">
+                            {% if comment.replies_cnt != 0 %}
+                            <button class="child-comments" onclick="toggleChildComments('{{comment.id}}')">
+                                {{comment.replies_cnt}}
+                                {% if comment.replies_cnt == 1 %}
+                                Reply
+                                {% else %}
+                                Replies
+                                {% endif %}
+                            </button>
+                            <div class="all_replies parent-{{comment.id}}">
+                                {% for reply in comment.replies.all %}
+                                <div class="upper">
+                                    <div class="profile-pic">
+                                        <img class="comment-pic" src="
+                                        {% if reply.commenter.profile.image %}{{ reply.commenter.profile.image.url }}
+                                        {% else %}
+                                        {% static 'pics/blank-profile.png'%}
+                                        {% endif %}" alt="">
+                                    </div>
+                                    <div class="commenter">
+                                        <div class="up">
+                                            <b>@{{reply.commenter}}</b>
+                                            <small>{{ reply.date_posted|timesince:""}} Ago</small>
+                                        </div>
+                                        <div class="down">
+                                            {{reply.text}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bottom">
+                                    <div class="likes" title="Like">
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="video_id" value="com_like">
+                                            <input type="hidden" name="comment_id" value="{{reply.id}}">
+                                            <button type="submit" class="com_like">
+                                                {% if request.user in reply.users_liked %}
+                                                <i class="material-icons comm_thumb"
+                                                    style="color: #065fd4;">thumb_up</i>
+                                                {% else %}
+                                                <i class="material-icons comm_thumb">thumb_up</i>
+                                                {% endif %}
+                                            </button>
+
+                                        </form>
+                                    </div>
+                                    <span>
+                                        {% if reply.likes > 0 %}
+                                        {{reply.likes}}
+                                        {% endif %}
+                                    </span>
+                                    <form action="" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="video_id" value="com_dislike">
+                                        <input type="hidden" name="comment_id" value="{{reply.id}}">
+                                        <button type="submit" class="com_like">
+                                            <i class="material-icons comm_thumb" title="Dislike">thumb_down</i>
+                                        </button>
+                                    </form>
+                                    <!-- <button class="reply" onclick="toggleReply('{{reply.id}}')"> -->
+                                    <!-- Reply
+                                                        </button> -->
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="secondary">
+        {% for x in videos %}
+        {% for y in videos %}
+        {% for video in videos %}
+        <a href="{% url 'video_view' video.id%}">
+            <div class="video">
+                <div class="video__thumbnail">
+                    <img src="{{video.thumbnail.url}}" alt="" />
+                </div>
+                <div class="video__details">
+                    <div class="title">
+                        <h3>
+                            {{video.title}}
+                        </h3>
+                        <a href="">{{video.user}}</a>
+                        <span>{{video.views}} Views • {{ video.upload_date|timesince:""}} Ago</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+        {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+<script>
+    document.getElementById('player').volume = 0.15;
+    function toggleSub() {
+        var button = document.querySelector(".subscribe");
+        if (button.innerHTML == "Subscribe") {
+            console.log('ok')
+            button.innerHTML = "Subscribed";
+            button.style.backgroundColor = "#606060";
+            button.innerHTML.style.color = "black";
+        } else {
+            button.innerHTML = "Subscribe";
+            button.style.backgroundColor = "black";
+        }
+    }
+    function copyUrl() {
+        var urlField = document.createElement("textarea");
+        urlField.value = "{{ current_url }}";
+
+        urlField.style.position = 'fixed';
+        urlField.style.opacity = 0;
+        document.body.appendChild(urlField);
+
+        urlField.select();
+        urlField.setSelectionRange(0, 99999);
+
+        document.execCommand('copy');
+
+        document.body.removeChild(urlField);
+
+        alert("URL copied to clipboard");
+    }
+    function toggleReply(commentId) {
+        let commentForm = document.querySelector(`.com-${commentId}`)
+        if (commentForm) {
+            if (commentForm.style.display == 'block') {
+                commentForm.style.display = 'none'
+            }
+            else {
+                commentForm.style.display = 'block'
+            }
+        }
+    }
+    function toggleChildComments(commentId) {
+        let parent_comment = document.querySelector(`.parent-${commentId}`)
+        if (parent_comment) {
+            if (parent_comment.style.display == 'block') {
+                parent_comment.style.display = 'none'
+            }
+            else {
+                parent_comment.style.display = 'block'
+            }
+        }
+    }
+</script>
+{% endblock body %}

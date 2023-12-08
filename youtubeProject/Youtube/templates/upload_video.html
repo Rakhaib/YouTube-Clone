@@ -5,12 +5,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
     <title>Upload Video - Your YouTube Clone</title>
+    {% endblock title %}
     <link rel="stylesheet" href="{% static 'css/upload.css'%}">
 </head>
 <body>
     <div class="upload-container">
-        <h1>Upload Video</h1>
+        {% block content %}
+            
+        
+        <h1>
+        {% block top %}
+            Upload Video
+        {% endblock top %}
+        </h1>
+        {% block update_form %}
+            
+        
         <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             
@@ -48,6 +60,8 @@
             
             <button type="submit">Upload Video</button>
         </form>
+        {% endblock update_form %}
     </div>
+    {% endblock content %}
 </body>
 </html>

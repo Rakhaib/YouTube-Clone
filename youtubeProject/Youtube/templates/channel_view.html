@@ -1,0 +1,100 @@
+{% extends 'trending.html' %}
+{% load static %}
+
+{% block title %}
+    Youtube- {{channel.username}}
+{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/channel.css' %}">
+{% endblock head %}
+
+
+{% block heading %}
+    <div class="heading">
+        {% if channel.profile.background_img %}
+        <img loading="lazy" src="{{ channel.profile.background_img.url }}" alt="" class="background">
+        {% endif %}
+        <div class="channel-details">
+            <img src="{% if channel.profile.image %}{{ channel.profile.image.url }}
+            {% else %}
+            {% static 'pics/blank-profile.png'%}
+            {% endif %}" alt="" class="channel-pic">
+            <div class="channel-name">
+                <div>{{channel.username}}</div>
+                <p>@{{channel.username}} . {{channel.profile.users_subscribed_cnt}} 
+                    {% if  channel.profile.users_subscribed_cnt != 1  %}
+                        Subscribers
+                    {% else %}
+                        Subscriber
+                    {% endif %}
+                   . {{channel.video_set.count}} 
+                   {% if  channel.video_set.count != 1  %}
+                        Videos
+                    {% else %}
+                        Videos
+                    {% endif %}
+                </p>
+                <p class="bio">
+                    {% if channel.profile.bio %}
+                        {{channel.profile.bio}}
+                    {% endif %}
+                </p>
+                {% if channel != request.user %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="video_id" value="subscribe">
+                        <input type="hidden" name="subscribe" value="{{channel.id}}">
+                        <button class="butn subscribe" onclick="toggleSub()" style="{% if request.user.profile in channel.profile.users_subscribed %}background-color: #888888;{% endif %}">
+                            {% if request.user.profile in channel.profile.users_subscribed %}
+                                Subscribed
+                            {% else %}
+                                Subscribe
+                            {% endif %}
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'edit_profile' %}">
+                        <button class="butn edit">
+                            Edit
+                        </button>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock heading %}
+
+{% block video-part %}
+
+{% if videos %}
+{% for video in videos %}
+    <a href="{% url 'video_view' video.id%}">
+        <div class="video">
+            <div class="video__thumbnail">
+                <img src="{{video.thumbnail.url}}" alt="" />
+            </div>
+            <div class="video__details">
+                <div class="author">
+                <img src="{% if video.user.profile.image %}{{ video.user.profile.image.url }}
+                {% else %}
+                {% static 'pics/blank-profile.png'%}
+                {% endif %}" alt="" />
+                </div>
+                <div class="title">
+                <h3>
+                    {{video.title}}
+                </h3>
+                <a href="">{{video.user}}</a>
+                <span>{{video.views}} Views • {{ video.upload_date|timesince:""}} Ago</span>
+                </div>
+            </div>
+        </div>
+    </a>
+{% endfor %}
+{% else %}
+<div style="text-align: center;" >Haven't Uploaded any Videos.</div>
+{% endif %}
+
+
+{% endblock video-part %}

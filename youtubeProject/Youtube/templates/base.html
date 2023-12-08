@@ -18,12 +18,12 @@
   <body>
     <div class="header">
       <div class="header__left">
-        <i id="menu" class="material-icons">menu</i>
-        <a href="{% url 'home' %}" title="YouTube"
-          ><img
+        <i id="menu" class="material-icons menu-icon">menu</i>
+        <a href="{% url 'home' %}" title="YouTube">
+          <img
             src="https://cdn.mos.cms.futurecdn.net/8gzcr6RpGStvZFA2qRt4v6.jpg"
-            alt=""
-        /></a>
+            alt=""/>
+          </a>
       </div>
 
       <div class="header__search">
@@ -41,7 +41,7 @@
         <i class="material-icons">apps</i>
         <i class="material-icons">notifications</i>
         {% if user.is_authenticated %}
-        <button class="profile-button" onclick=toggleMenu() title="{{user.username}}">
+        <button class="profile-button" onclick=toggleMenu() >
           <img
             src="{% if user.profile.image %}{{ user.profile.image.url }}
               {% else %}
@@ -49,7 +49,36 @@
               {% endif %}"
             alt="Profile"
             class="profile-pic"
+            title="{{user.username}}"
           />
+          
+          <ul class="menu-list" id="menuList">
+            <li><a href="{% url 'channel' user.username%}">
+                <div class="contain">
+                    <i class="material-icons  menu-icons">person</i>
+                    <span class="text">
+                        My Account
+                    </span>
+                </div>
+            </a></li>
+            <li><a href="#">
+                <div class="contain">
+                    <i class="material-icons menu-icons">history</i>
+                    <span class="text">
+                        History
+                    </span>
+                </div>
+            </a></li>
+            <li><a href="{% url 'logout' %}">
+                <div class="contain">
+                    <i class="material-icons menu-icons">logout</i>
+                    <span class="text">
+                        Sign out
+                    </span>
+                </div>
+            </a></li>
+          </ul>
+              
         </button>
         {% else %}
         <a href="{% url 'login' %}" title="Login/Register">
@@ -72,30 +101,44 @@
               <span class="icon-text">Home</span>
             </div>
           </a>
-          <div class="sidebar__category">
-            <i class="material-icons">local_fire_department</i>
-            <span class="icon-text">Trending</span>
-          </div>
-          <div class="sidebar__category">
-            <i class="material-icons">subscriptions</i>
-            <span class="icon-text">Subcriptions</span>
-          </div>
+          <a href="{% url 'trending' %}">
+            <div class="sidebar__category">
+              <i class="material-icons">local_fire_department</i>
+              <span class="icon-text">Trending</span>
+            </div>
+          </a>
+          <a href="{% url 'subscriptions' %}">
+            <div class="sidebar__category">
+              <i class="material-icons">subscriptions</i>
+              <span class="icon-text">Subcriptions</span>
+            </div>
+          </a>
         </div>
         <hr />
         <div class="sidebar__categories">
 
-          <div class="sidebar__category">
-            <i class="material-icons">history</i>
-            <span class="icon-text">History</span>
-          </div>
-          <div class="sidebar__category">
-            <i class="material-icons">play_arrow</i>
-            <span class="icon-text">Your Videos</span>
-          </div>
-          <div class="sidebar__category">
-            <i class="material-icons">thumb_up</i>
-            <span class="icon-text">Liked Videos</span>
-          </div>
+          
+          {% if user.is_authenticated %}
+            <a href="{% url 'channel' user.username %}">
+              <div class="sidebar__category">
+                <i class="material-icons">play_arrow</i>
+                <span class="icon-text">Your Videos</span>
+              </div>
+            </a>
+          {% else %}
+            <a href="{% url 'login' %}">
+              <div class="sidebar__category">
+                <i class="material-icons">play_arrow</i>
+                <span class="icon-text">Your Videos</span>
+              </div>
+            </a>
+          {% endif %}
+          <a href="{%url 'liked_videos'%}">
+            <div class="sidebar__category">
+              <i class="material-icons">thumb_up</i>
+              <span class="icon-text">Liked Videos</span>
+            </div>
+          </a>
         </div>
         <hr />
       </div>
@@ -103,9 +146,21 @@
 
       <!-- Videos Section -->
 
-      <div class="videos">{% block body %} {% endblock body %}</div>
+      <div class="videos">{% block body %} ok{% endblock body %}</div>
     </div>
     <script>
+      function toggleMenu() {
+        var menu = document.getElementById("menuList");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      }
+      document.addEventListener('mouseup', function (e) {
+        var menuList = document.getElementById('menuList');
+        var profileButton = document.querySelector('.profile-button');
+    
+        if (!menuList.contains(e.target) && !profileButton.contains(e.target)) {
+            menuList.style.display = 'none';
+        }
+    });
       document.addEventListener("DOMContentLoaded", function () {
         const hamburgerIcon = document.getElementById("menu");
         const sidebar = document.querySelector(".sidebar");
@@ -113,6 +168,7 @@
           sidebar.classList.toggle("sidebar-visible");
         });
       });
+      
     </script>
   </body>
 </html>

@@ -1,0 +1,56 @@
+
+
+.videos{
+    padding: 0px;
+    background-color: #ffffff;
+}
+
+.heading{
+    display: flex;
+    align-items: center;
+    padding-left: calc(50% - 643px);
+}
+
+.heading img{
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.heading h1{
+    font-family: "Roboto","Arial",sans-serif;
+    font-size: 3rem;
+    line-height: 5rem;
+    font-weight: 900;
+}
+
+.video{
+    margin-bottom: 16px;
+    margin-top: 16px;
+    display:flex;
+    width: 838px;
+    height: 138px;
+    padding-left: calc(50% - 643px);
+    padding-right: calc(50% - 643px);
+}
+
+.video:hover{
+    transform: scale(0.98);
+    transition:transform 0.2s ease;
+}
+
+.video__thumbnail{
+    width: 246px;
+    height:138px;
+}
+
+.video__details{
+    margin-left:12px;
+    margin-top:1px;
+}
+
+.descrip{
+    padding-top: 13px;
+}
+
